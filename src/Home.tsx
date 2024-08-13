@@ -27,7 +27,14 @@ export default function Home() {
       window.removeEventListener('message', handleMessage);
     };
   }, []);
-
+  const sendMessageToMain = () => {
+    if (window.parent) {
+      window.parent.postMessage(
+        { message: 'Mensaje enviado del microfront-2' },
+        'https://main.d361oyi4mjetyu.amplifyapp.com'
+      );
+    }
+  };
   return (
     <>
       <div>
@@ -42,6 +49,9 @@ export default function Home() {
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
           count is {count}
+        </button>
+        <button onClick={sendMessageToMain}>
+          Send message to main
         </button>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
