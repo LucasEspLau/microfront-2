@@ -1,10 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
+import './App.css';
 
 export default function Home() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const handleMessage = (event:MessageEvent) => {
+      // Verifica que el mensaje proviene del dominio esperado
+      if (event.origin !== 'https://main.d361oyi4mjetyu.amplifyapp.com') return;
+
+      // Procesa el mensaje
+      const { count } = event.data;
+      if (typeof count === 'number') {
+        console.log('Count received:', count);
+        setCount(count);
+      }
+    };
+
+    // Escucha el evento de mensaje
+    window.addEventListener('message', handleMessage);
+
+    // Limpieza cuando el componente se desmonte
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   return (
     <>
@@ -29,5 +51,5 @@ export default function Home() {
         Click on the Vite and React logos to learn more
       </p>
     </>
-  )
+  );
 }
